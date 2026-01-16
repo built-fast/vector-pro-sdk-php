@@ -4,38 +4,12 @@ declare(strict_types=1);
 
 namespace VectorPro\Sdk;
 
-use Http\Discovery\Psr17FactoryDiscovery;
-use Http\Discovery\Psr18ClientDiscovery;
-use JsonException;
-use Psr\Http\Client\ClientInterface as HttpClientInterface;
-use Psr\Http\Message\RequestFactoryInterface;
-use Psr\Http\Message\StreamFactoryInterface;
 use VectorPro\Sdk\Exceptions\ClientException;
 
-final class Client implements ClientInterface
+interface ClientInterface
 {
-    private const DEFAULT_BASE_URL = 'https://api.vector.pro';
-
-    private HttpClientInterface $httpClient;
-
-    private RequestFactoryInterface $requestFactory;
-
-    private StreamFactoryInterface $streamFactory;
-
-    public function __construct(
-        private readonly string $apiKey,
-        private readonly string $baseUrl = self::DEFAULT_BASE_URL,
-        ?HttpClientInterface $httpClient = null,
-        ?RequestFactoryInterface $requestFactory = null,
-        ?StreamFactoryInterface $streamFactory = null,
-    ) {
-        $this->httpClient = $httpClient ?? Psr18ClientDiscovery::find();
-        $this->requestFactory = $requestFactory ?? Psr17FactoryDiscovery::findRequestFactory();
-        $this->streamFactory = $streamFactory ?? Psr17FactoryDiscovery::findStreamFactory();
-    }
-
     // =========================================================================
-    // Sites (10 methods)
+    // Sites
     // =========================================================================
 
     /**
@@ -47,13 +21,7 @@ final class Client implements ClientInterface
      *
      * @throws ClientException
      */
-    public function getSites(int $page = 1, int $perPage = 15): array
-    {
-        return $this->request('GET', '/api/v1/vector/sites', [
-            'page' => $page,
-            'per_page' => $perPage,
-        ]);
-    }
+    public function getSites(int $page = 1, int $perPage = 15): array;
 
     /**
      * Get a single site.
@@ -63,10 +31,7 @@ final class Client implements ClientInterface
      *
      * @throws ClientException
      */
-    public function getSite(string $siteId): array
-    {
-        return $this->request('GET', "/api/v1/vector/sites/{$siteId}");
-    }
+    public function getSite(string $siteId): array;
 
     /**
      * Create a new site.
@@ -76,10 +41,7 @@ final class Client implements ClientInterface
      *
      * @throws ClientException
      */
-    public function createSite(array $data): array
-    {
-        return $this->request('POST', '/api/v1/vector/sites', $data);
-    }
+    public function createSite(array $data): array;
 
     /**
      * Update a site.
@@ -90,10 +52,7 @@ final class Client implements ClientInterface
      *
      * @throws ClientException
      */
-    public function updateSite(string $siteId, array $data): array
-    {
-        return $this->request('PUT', "/api/v1/vector/sites/{$siteId}", $data);
-    }
+    public function updateSite(string $siteId, array $data): array;
 
     /**
      * Delete a site.
@@ -103,10 +62,7 @@ final class Client implements ClientInterface
      *
      * @throws ClientException
      */
-    public function deleteSite(string $siteId): array
-    {
-        return $this->request('DELETE', "/api/v1/vector/sites/{$siteId}");
-    }
+    public function deleteSite(string $siteId): array;
 
     /**
      * Suspend a site.
@@ -116,10 +72,7 @@ final class Client implements ClientInterface
      *
      * @throws ClientException
      */
-    public function suspendSite(string $siteId): array
-    {
-        return $this->request('PUT', "/api/v1/vector/sites/{$siteId}/suspend");
-    }
+    public function suspendSite(string $siteId): array;
 
     /**
      * Unsuspend a site.
@@ -129,10 +82,7 @@ final class Client implements ClientInterface
      *
      * @throws ClientException
      */
-    public function unsuspendSite(string $siteId): array
-    {
-        return $this->request('PUT', "/api/v1/vector/sites/{$siteId}/unsuspend");
-    }
+    public function unsuspendSite(string $siteId): array;
 
     /**
      * Reset a site's SFTP password.
@@ -142,10 +92,7 @@ final class Client implements ClientInterface
      *
      * @throws ClientException
      */
-    public function resetSiteSftpPassword(string $siteId): array
-    {
-        return $this->request('PUT', "/api/v1/vector/sites/{$siteId}/reset-sftp-password");
-    }
+    public function resetSiteSftpPassword(string $siteId): array;
 
     /**
      * Reset a site's database password.
@@ -155,10 +102,7 @@ final class Client implements ClientInterface
      *
      * @throws ClientException
      */
-    public function resetSiteDatabasePassword(string $siteId): array
-    {
-        return $this->request('PUT', "/api/v1/vector/sites/{$siteId}/reset-database-password");
-    }
+    public function resetSiteDatabasePassword(string $siteId): array;
 
     /**
      * Purge a site's CDN cache.
@@ -169,13 +113,10 @@ final class Client implements ClientInterface
      *
      * @throws ClientException
      */
-    public function purgeSiteCache(string $siteId, array $data = []): array
-    {
-        return $this->request('POST', "/api/v1/vector/sites/{$siteId}/purge-cache", $data);
-    }
+    public function purgeSiteCache(string $siteId, array $data = []): array;
 
     // =========================================================================
-    // Environments (8 methods)
+    // Environments
     // =========================================================================
 
     /**
@@ -188,13 +129,7 @@ final class Client implements ClientInterface
      *
      * @throws ClientException
      */
-    public function getEnvironments(string $siteId, int $page = 1, int $perPage = 15): array
-    {
-        return $this->request('GET', "/api/v1/vector/sites/{$siteId}/environments", [
-            'page' => $page,
-            'per_page' => $perPage,
-        ]);
-    }
+    public function getEnvironments(string $siteId, int $page = 1, int $perPage = 15): array;
 
     /**
      * Get a single environment.
@@ -205,10 +140,7 @@ final class Client implements ClientInterface
      *
      * @throws ClientException
      */
-    public function getEnvironment(string $siteId, string $environmentId): array
-    {
-        return $this->request('GET', "/api/v1/vector/sites/{$siteId}/environments/{$environmentId}");
-    }
+    public function getEnvironment(string $siteId, string $environmentId): array;
 
     /**
      * Create a new environment.
@@ -219,10 +151,7 @@ final class Client implements ClientInterface
      *
      * @throws ClientException
      */
-    public function createEnvironment(string $siteId, array $data): array
-    {
-        return $this->request('POST', "/api/v1/vector/sites/{$siteId}/environments", $data);
-    }
+    public function createEnvironment(string $siteId, array $data): array;
 
     /**
      * Update an environment.
@@ -234,10 +163,7 @@ final class Client implements ClientInterface
      *
      * @throws ClientException
      */
-    public function updateEnvironment(string $siteId, string $environmentId, array $data): array
-    {
-        return $this->request('PUT', "/api/v1/vector/sites/{$siteId}/environments/{$environmentId}", $data);
-    }
+    public function updateEnvironment(string $siteId, string $environmentId, array $data): array;
 
     /**
      * Delete an environment.
@@ -248,10 +174,7 @@ final class Client implements ClientInterface
      *
      * @throws ClientException
      */
-    public function deleteEnvironment(string $siteId, string $environmentId): array
-    {
-        return $this->request('DELETE', "/api/v1/vector/sites/{$siteId}/environments/{$environmentId}");
-    }
+    public function deleteEnvironment(string $siteId, string $environmentId): array;
 
     /**
      * Suspend an environment.
@@ -262,10 +185,7 @@ final class Client implements ClientInterface
      *
      * @throws ClientException
      */
-    public function suspendEnvironment(string $siteId, string $environmentId): array
-    {
-        return $this->request('PUT', "/api/v1/vector/sites/{$siteId}/environments/{$environmentId}/suspend");
-    }
+    public function suspendEnvironment(string $siteId, string $environmentId): array;
 
     /**
      * Unsuspend an environment.
@@ -276,10 +196,7 @@ final class Client implements ClientInterface
      *
      * @throws ClientException
      */
-    public function unsuspendEnvironment(string $siteId, string $environmentId): array
-    {
-        return $this->request('PUT', "/api/v1/vector/sites/{$siteId}/environments/{$environmentId}/unsuspend");
-    }
+    public function unsuspendEnvironment(string $siteId, string $environmentId): array;
 
     /**
      * Reset an environment's database password.
@@ -290,13 +207,10 @@ final class Client implements ClientInterface
      *
      * @throws ClientException
      */
-    public function resetEnvironmentDatabasePassword(string $siteId, string $environmentId): array
-    {
-        return $this->request('PUT', "/api/v1/vector/sites/{$siteId}/environments/{$environmentId}/reset-database-password");
-    }
+    public function resetEnvironmentDatabasePassword(string $siteId, string $environmentId): array;
 
     // =========================================================================
-    // Deployments (4 methods)
+    // Deployments
     // =========================================================================
 
     /**
@@ -310,13 +224,7 @@ final class Client implements ClientInterface
      *
      * @throws ClientException
      */
-    public function getDeployments(string $siteId, string $environmentId, int $page = 1, int $perPage = 15): array
-    {
-        return $this->request('GET', "/api/v1/vector/sites/{$siteId}/environments/{$environmentId}/deployments", [
-            'page' => $page,
-            'per_page' => $perPage,
-        ]);
-    }
+    public function getDeployments(string $siteId, string $environmentId, int $page = 1, int $perPage = 15): array;
 
     /**
      * Get a single deployment.
@@ -328,10 +236,7 @@ final class Client implements ClientInterface
      *
      * @throws ClientException
      */
-    public function getDeployment(string $siteId, string $environmentId, string $deploymentId): array
-    {
-        return $this->request('GET', "/api/v1/vector/sites/{$siteId}/environments/{$environmentId}/deployments/{$deploymentId}");
-    }
+    public function getDeployment(string $siteId, string $environmentId, string $deploymentId): array;
 
     /**
      * Create a new deployment.
@@ -342,10 +247,7 @@ final class Client implements ClientInterface
      *
      * @throws ClientException
      */
-    public function createDeployment(string $siteId, string $environmentId): array
-    {
-        return $this->request('POST', "/api/v1/vector/sites/{$siteId}/environments/{$environmentId}/deployments");
-    }
+    public function createDeployment(string $siteId, string $environmentId): array;
 
     /**
      * Rollback to a previous deployment.
@@ -357,13 +259,10 @@ final class Client implements ClientInterface
      *
      * @throws ClientException
      */
-    public function rollbackDeployment(string $siteId, string $environmentId, string $deploymentId): array
-    {
-        return $this->request('POST', "/api/v1/vector/sites/{$siteId}/environments/{$environmentId}/deployments/{$deploymentId}/rollback");
-    }
+    public function rollbackDeployment(string $siteId, string $environmentId, string $deploymentId): array;
 
     // =========================================================================
-    // SSL (2 methods)
+    // SSL
     // =========================================================================
 
     /**
@@ -375,10 +274,7 @@ final class Client implements ClientInterface
      *
      * @throws ClientException
      */
-    public function getSslStatus(string $siteId, string $environmentId): array
-    {
-        return $this->request('GET', "/api/v1/vector/sites/{$siteId}/environments/{$environmentId}/ssl");
-    }
+    public function getSslStatus(string $siteId, string $environmentId): array;
 
     /**
      * Nudge SSL certificate renewal.
@@ -389,13 +285,10 @@ final class Client implements ClientInterface
      *
      * @throws ClientException
      */
-    public function nudgeSsl(string $siteId, string $environmentId): array
-    {
-        return $this->request('POST', "/api/v1/vector/sites/{$siteId}/environments/{$environmentId}/ssl/nudge");
-    }
+    public function nudgeSsl(string $siteId, string $environmentId): array;
 
     // =========================================================================
-    // Environment Secrets (4 methods)
+    // Environment Secrets
     // =========================================================================
 
     /**
@@ -407,10 +300,7 @@ final class Client implements ClientInterface
      *
      * @throws ClientException
      */
-    public function getEnvironmentSecrets(string $siteId, string $environmentId): array
-    {
-        return $this->request('GET', "/api/v1/vector/sites/{$siteId}/environments/{$environmentId}/secrets");
-    }
+    public function getEnvironmentSecrets(string $siteId, string $environmentId): array;
 
     /**
      * Create a new environment secret.
@@ -422,10 +312,7 @@ final class Client implements ClientInterface
      *
      * @throws ClientException
      */
-    public function createEnvironmentSecret(string $siteId, string $environmentId, array $data): array
-    {
-        return $this->request('POST', "/api/v1/vector/sites/{$siteId}/environments/{$environmentId}/secrets", $data);
-    }
+    public function createEnvironmentSecret(string $siteId, string $environmentId, array $data): array;
 
     /**
      * Update an environment secret.
@@ -438,10 +325,7 @@ final class Client implements ClientInterface
      *
      * @throws ClientException
      */
-    public function updateEnvironmentSecret(string $siteId, string $environmentId, string $secretId, array $data): array
-    {
-        return $this->request('PUT', "/api/v1/vector/sites/{$siteId}/environments/{$environmentId}/secrets/{$secretId}", $data);
-    }
+    public function updateEnvironmentSecret(string $siteId, string $environmentId, string $secretId, array $data): array;
 
     /**
      * Delete an environment secret.
@@ -453,13 +337,10 @@ final class Client implements ClientInterface
      *
      * @throws ClientException
      */
-    public function deleteEnvironmentSecret(string $siteId, string $environmentId, string $secretId): array
-    {
-        return $this->request('DELETE', "/api/v1/vector/sites/{$siteId}/environments/{$environmentId}/secrets/{$secretId}");
-    }
+    public function deleteEnvironmentSecret(string $siteId, string $environmentId, string $secretId): array;
 
     // =========================================================================
-    // Global Secrets (4 methods)
+    // Global Secrets
     // =========================================================================
 
     /**
@@ -471,13 +352,7 @@ final class Client implements ClientInterface
      *
      * @throws ClientException
      */
-    public function getGlobalSecrets(int $page = 1, int $perPage = 15): array
-    {
-        return $this->request('GET', '/api/v1/vector/secrets', [
-            'page' => $page,
-            'per_page' => $perPage,
-        ]);
-    }
+    public function getGlobalSecrets(int $page = 1, int $perPage = 15): array;
 
     /**
      * Create a new global secret.
@@ -487,10 +362,7 @@ final class Client implements ClientInterface
      *
      * @throws ClientException
      */
-    public function createGlobalSecret(array $data): array
-    {
-        return $this->request('POST', '/api/v1/vector/secrets', $data);
-    }
+    public function createGlobalSecret(array $data): array;
 
     /**
      * Update a global secret.
@@ -501,10 +373,7 @@ final class Client implements ClientInterface
      *
      * @throws ClientException
      */
-    public function updateGlobalSecret(string $secretId, array $data): array
-    {
-        return $this->request('PUT', "/api/v1/vector/secrets/{$secretId}", $data);
-    }
+    public function updateGlobalSecret(string $secretId, array $data): array;
 
     /**
      * Delete a global secret.
@@ -514,13 +383,10 @@ final class Client implements ClientInterface
      *
      * @throws ClientException
      */
-    public function deleteGlobalSecret(string $secretId): array
-    {
-        return $this->request('DELETE', "/api/v1/vector/secrets/{$secretId}");
-    }
+    public function deleteGlobalSecret(string $secretId): array;
 
     // =========================================================================
-    // API Keys (3 methods)
+    // API Keys
     // =========================================================================
 
     /**
@@ -532,13 +398,7 @@ final class Client implements ClientInterface
      *
      * @throws ClientException
      */
-    public function getApiKeys(int $page = 1, int $perPage = 15): array
-    {
-        return $this->request('GET', '/api/v1/vector/api-keys', [
-            'page' => $page,
-            'per_page' => $perPage,
-        ]);
-    }
+    public function getApiKeys(int $page = 1, int $perPage = 15): array;
 
     /**
      * Create a new API key.
@@ -548,10 +408,7 @@ final class Client implements ClientInterface
      *
      * @throws ClientException
      */
-    public function createApiKey(array $data): array
-    {
-        return $this->request('POST', '/api/v1/vector/api-keys', $data);
-    }
+    public function createApiKey(array $data): array;
 
     /**
      * Delete an API key.
@@ -561,13 +418,10 @@ final class Client implements ClientInterface
      *
      * @throws ClientException
      */
-    public function deleteApiKey(string $apiKeyId): array
-    {
-        return $this->request('DELETE', "/api/v1/vector/api-keys/{$apiKeyId}");
-    }
+    public function deleteApiKey(string $apiKeyId): array;
 
     // =========================================================================
-    // SSH Keys - Account (4 methods)
+    // SSH Keys - Account
     // =========================================================================
 
     /**
@@ -579,13 +433,7 @@ final class Client implements ClientInterface
      *
      * @throws ClientException
      */
-    public function getSshKeys(int $page = 1, int $perPage = 15): array
-    {
-        return $this->request('GET', '/api/v1/vector/ssh-keys', [
-            'page' => $page,
-            'per_page' => $perPage,
-        ]);
-    }
+    public function getSshKeys(int $page = 1, int $perPage = 15): array;
 
     /**
      * Get a single account SSH key.
@@ -595,10 +443,7 @@ final class Client implements ClientInterface
      *
      * @throws ClientException
      */
-    public function getSshKey(string $sshKeyId): array
-    {
-        return $this->request('GET', "/api/v1/vector/ssh-keys/{$sshKeyId}");
-    }
+    public function getSshKey(string $sshKeyId): array;
 
     /**
      * Create a new account SSH key.
@@ -608,10 +453,7 @@ final class Client implements ClientInterface
      *
      * @throws ClientException
      */
-    public function createSshKey(array $data): array
-    {
-        return $this->request('POST', '/api/v1/vector/ssh-keys', $data);
-    }
+    public function createSshKey(array $data): array;
 
     /**
      * Delete an account SSH key.
@@ -621,13 +463,10 @@ final class Client implements ClientInterface
      *
      * @throws ClientException
      */
-    public function deleteSshKey(string $sshKeyId): array
-    {
-        return $this->request('DELETE', "/api/v1/vector/ssh-keys/{$sshKeyId}");
-    }
+    public function deleteSshKey(string $sshKeyId): array;
 
     // =========================================================================
-    // SSH Keys - Site (3 methods)
+    // SSH Keys - Site
     // =========================================================================
 
     /**
@@ -638,10 +477,7 @@ final class Client implements ClientInterface
      *
      * @throws ClientException
      */
-    public function getSiteSshKeys(string $siteId): array
-    {
-        return $this->request('GET', "/api/v1/vector/sites/{$siteId}/ssh-keys");
-    }
+    public function getSiteSshKeys(string $siteId): array;
 
     /**
      * Attach an SSH key to a site.
@@ -652,10 +488,7 @@ final class Client implements ClientInterface
      *
      * @throws ClientException
      */
-    public function addSiteSshKey(string $siteId, string $sshKeyId): array
-    {
-        return $this->request('POST', "/api/v1/vector/sites/{$siteId}/ssh-keys/{$sshKeyId}");
-    }
+    public function addSiteSshKey(string $siteId, string $sshKeyId): array;
 
     /**
      * Remove an SSH key from a site.
@@ -666,13 +499,10 @@ final class Client implements ClientInterface
      *
      * @throws ClientException
      */
-    public function removeSiteSshKey(string $siteId, string $sshKeyId): array
-    {
-        return $this->request('DELETE', "/api/v1/vector/sites/{$siteId}/ssh-keys/{$sshKeyId}");
-    }
+    public function removeSiteSshKey(string $siteId, string $sshKeyId): array;
 
     // =========================================================================
-    // Webhooks (6 methods)
+    // Webhooks
     // =========================================================================
 
     /**
@@ -684,13 +514,7 @@ final class Client implements ClientInterface
      *
      * @throws ClientException
      */
-    public function getWebhooks(int $page = 1, int $perPage = 15): array
-    {
-        return $this->request('GET', '/api/v1/vector/webhooks', [
-            'page' => $page,
-            'per_page' => $perPage,
-        ]);
-    }
+    public function getWebhooks(int $page = 1, int $perPage = 15): array;
 
     /**
      * Get a single webhook.
@@ -700,10 +524,7 @@ final class Client implements ClientInterface
      *
      * @throws ClientException
      */
-    public function getWebhook(string $webhookId): array
-    {
-        return $this->request('GET', "/api/v1/vector/webhooks/{$webhookId}");
-    }
+    public function getWebhook(string $webhookId): array;
 
     /**
      * Create a new webhook.
@@ -713,10 +534,7 @@ final class Client implements ClientInterface
      *
      * @throws ClientException
      */
-    public function createWebhook(array $data): array
-    {
-        return $this->request('POST', '/api/v1/vector/webhooks', $data);
-    }
+    public function createWebhook(array $data): array;
 
     /**
      * Update a webhook.
@@ -727,10 +545,7 @@ final class Client implements ClientInterface
      *
      * @throws ClientException
      */
-    public function updateWebhook(string $webhookId, array $data): array
-    {
-        return $this->request('PUT', "/api/v1/vector/webhooks/{$webhookId}", $data);
-    }
+    public function updateWebhook(string $webhookId, array $data): array;
 
     /**
      * Delete a webhook.
@@ -740,10 +555,7 @@ final class Client implements ClientInterface
      *
      * @throws ClientException
      */
-    public function deleteWebhook(string $webhookId): array
-    {
-        return $this->request('DELETE', "/api/v1/vector/webhooks/{$webhookId}");
-    }
+    public function deleteWebhook(string $webhookId): array;
 
     /**
      * Rotate a webhook's secret.
@@ -753,13 +565,10 @@ final class Client implements ClientInterface
      *
      * @throws ClientException
      */
-    public function rotateWebhookSecret(string $webhookId): array
-    {
-        return $this->request('POST', "/api/v1/vector/webhooks/{$webhookId}/rotate-secret");
-    }
+    public function rotateWebhookSecret(string $webhookId): array;
 
     // =========================================================================
-    // WAF - Allowed Referrers (3 methods)
+    // WAF - Allowed Referrers
     // =========================================================================
 
     /**
@@ -770,10 +579,7 @@ final class Client implements ClientInterface
      *
      * @throws ClientException
      */
-    public function getWafAllowedReferrers(string $siteId): array
-    {
-        return $this->request('GET', "/api/v1/vector/sites/{$siteId}/waf/allowed-referrers");
-    }
+    public function getWafAllowedReferrers(string $siteId): array;
 
     /**
      * Add a WAF allowed referrer.
@@ -784,10 +590,7 @@ final class Client implements ClientInterface
      *
      * @throws ClientException
      */
-    public function addWafAllowedReferrer(string $siteId, array $data): array
-    {
-        return $this->request('POST', "/api/v1/vector/sites/{$siteId}/waf/allowed-referrers", $data);
-    }
+    public function addWafAllowedReferrer(string $siteId, array $data): array;
 
     /**
      * Remove a WAF allowed referrer.
@@ -798,13 +601,10 @@ final class Client implements ClientInterface
      *
      * @throws ClientException
      */
-    public function removeWafAllowedReferrer(string $siteId, string $referrerId): array
-    {
-        return $this->request('DELETE', "/api/v1/vector/sites/{$siteId}/waf/allowed-referrers/{$referrerId}");
-    }
+    public function removeWafAllowedReferrer(string $siteId, string $referrerId): array;
 
     // =========================================================================
-    // WAF - Blocked Referrers (3 methods)
+    // WAF - Blocked Referrers
     // =========================================================================
 
     /**
@@ -815,10 +615,7 @@ final class Client implements ClientInterface
      *
      * @throws ClientException
      */
-    public function getWafBlockedReferrers(string $siteId): array
-    {
-        return $this->request('GET', "/api/v1/vector/sites/{$siteId}/waf/blocked-referrers");
-    }
+    public function getWafBlockedReferrers(string $siteId): array;
 
     /**
      * Add a WAF blocked referrer.
@@ -829,10 +626,7 @@ final class Client implements ClientInterface
      *
      * @throws ClientException
      */
-    public function addWafBlockedReferrer(string $siteId, array $data): array
-    {
-        return $this->request('POST', "/api/v1/vector/sites/{$siteId}/waf/blocked-referrers", $data);
-    }
+    public function addWafBlockedReferrer(string $siteId, array $data): array;
 
     /**
      * Remove a WAF blocked referrer.
@@ -843,13 +637,10 @@ final class Client implements ClientInterface
      *
      * @throws ClientException
      */
-    public function removeWafBlockedReferrer(string $siteId, string $referrerId): array
-    {
-        return $this->request('DELETE', "/api/v1/vector/sites/{$siteId}/waf/blocked-referrers/{$referrerId}");
-    }
+    public function removeWafBlockedReferrer(string $siteId, string $referrerId): array;
 
     // =========================================================================
-    // WAF - Blocked IPs (3 methods)
+    // WAF - Blocked IPs
     // =========================================================================
 
     /**
@@ -860,10 +651,7 @@ final class Client implements ClientInterface
      *
      * @throws ClientException
      */
-    public function getWafBlockedIps(string $siteId): array
-    {
-        return $this->request('GET', "/api/v1/vector/sites/{$siteId}/waf/blocked-ips");
-    }
+    public function getWafBlockedIps(string $siteId): array;
 
     /**
      * Add a WAF blocked IP.
@@ -874,10 +662,7 @@ final class Client implements ClientInterface
      *
      * @throws ClientException
      */
-    public function addWafBlockedIp(string $siteId, array $data): array
-    {
-        return $this->request('POST', "/api/v1/vector/sites/{$siteId}/waf/blocked-ips", $data);
-    }
+    public function addWafBlockedIp(string $siteId, array $data): array;
 
     /**
      * Remove a WAF blocked IP.
@@ -888,13 +673,10 @@ final class Client implements ClientInterface
      *
      * @throws ClientException
      */
-    public function removeWafBlockedIp(string $siteId, string $blockedIpId): array
-    {
-        return $this->request('DELETE', "/api/v1/vector/sites/{$siteId}/waf/blocked-ips/{$blockedIpId}");
-    }
+    public function removeWafBlockedIp(string $siteId, string $blockedIpId): array;
 
     // =========================================================================
-    // WAF - Rate Limits (3 methods)
+    // WAF - Rate Limits
     // =========================================================================
 
     /**
@@ -905,10 +687,7 @@ final class Client implements ClientInterface
      *
      * @throws ClientException
      */
-    public function getWafRateLimits(string $siteId): array
-    {
-        return $this->request('GET', "/api/v1/vector/sites/{$siteId}/waf/rate-limits");
-    }
+    public function getWafRateLimits(string $siteId): array;
 
     /**
      * Set WAF rate limits.
@@ -919,10 +698,7 @@ final class Client implements ClientInterface
      *
      * @throws ClientException
      */
-    public function setWafRateLimits(string $siteId, array $data): array
-    {
-        return $this->request('PUT', "/api/v1/vector/sites/{$siteId}/waf/rate-limits", $data);
-    }
+    public function setWafRateLimits(string $siteId, array $data): array;
 
     /**
      * Delete a WAF rate limit.
@@ -933,13 +709,10 @@ final class Client implements ClientInterface
      *
      * @throws ClientException
      */
-    public function deleteWafRateLimit(string $siteId, string $rateLimitId): array
-    {
-        return $this->request('DELETE', "/api/v1/vector/sites/{$siteId}/waf/rate-limits/{$rateLimitId}");
-    }
+    public function deleteWafRateLimit(string $siteId, string $rateLimitId): array;
 
     // =========================================================================
-    // Read-only (4 methods)
+    // Read-only
     // =========================================================================
 
     /**
@@ -949,10 +722,7 @@ final class Client implements ClientInterface
      *
      * @throws ClientException
      */
-    public function getPhpVersions(): array
-    {
-        return $this->request('GET', '/api/v1/vector/php-versions');
-    }
+    public function getPhpVersions(): array;
 
     /**
      * Get event log.
@@ -963,13 +733,7 @@ final class Client implements ClientInterface
      *
      * @throws ClientException
      */
-    public function getEvents(int $page = 1, int $perPage = 15): array
-    {
-        return $this->request('GET', '/api/v1/vector/events', [
-            'page' => $page,
-            'per_page' => $perPage,
-        ]);
-    }
+    public function getEvents(int $page = 1, int $perPage = 15): array;
 
     /**
      * Get site logs.
@@ -980,10 +744,7 @@ final class Client implements ClientInterface
      *
      * @throws ClientException
      */
-    public function getSiteLogs(string $siteId, array $params = []): array
-    {
-        return $this->request('GET', "/api/v1/vector/sites/{$siteId}/logs", $params);
-    }
+    public function getSiteLogs(string $siteId, array $params = []): array;
 
     /**
      * Get webhook delivery logs.
@@ -995,91 +756,5 @@ final class Client implements ClientInterface
      *
      * @throws ClientException
      */
-    public function getWebhookLogs(string $webhookId, int $page = 1, int $perPage = 15): array
-    {
-        return $this->request('GET', "/api/v1/vector/webhooks/{$webhookId}/logs", [
-            'page' => $page,
-            'per_page' => $perPage,
-        ]);
-    }
-
-    // =========================================================================
-    // HTTP Request Handling
-    // =========================================================================
-
-    /**
-     * Make an HTTP request to the API.
-     *
-     * @param  string  $method  HTTP method
-     * @param  string  $path  API path
-     * @param  array<string, mixed>  $data  Request data
-     * @return array<string, mixed>
-     *
-     * @throws ClientException
-     */
-    private function request(string $method, string $path, array $data = []): array
-    {
-        $uri = $this->baseUrl.'/'.ltrim($path, '/');
-
-        // For GET requests, append data as query string
-        if ($method === 'GET' && $data !== []) {
-            $uri .= '?'.http_build_query($data);
-        }
-
-        $request = $this->requestFactory->createRequest($method, $uri)
-            ->withHeader('Authorization', 'Bearer '.$this->apiKey)
-            ->withHeader('Content-Type', 'application/json')
-            ->withHeader('Accept', 'application/json');
-
-        // For non-GET requests, send data as JSON body
-        if ($method !== 'GET' && $data !== []) {
-            $request = $request->withBody(
-                $this->streamFactory->createStream(json_encode($data, JSON_THROW_ON_ERROR))
-            );
-        }
-
-        $response = $this->httpClient->sendRequest($request);
-        $statusCode = $response->getStatusCode();
-        $responseBody = (string) $response->getBody();
-
-        // Handle empty responses (204 No Content, etc.)
-        if ($responseBody === '') {
-            return [];
-        }
-
-        try {
-            /** @var array<string, mixed> $body */
-            $body = json_decode($responseBody, true, 512, JSON_THROW_ON_ERROR);
-        } catch (JsonException $e) {
-            throw new ClientException(
-                'Invalid JSON response from API',
-                $statusCode,
-                ['raw_response' => $responseBody]
-            );
-        }
-
-        $this->throwIfError($statusCode, $body);
-
-        /** @var array<string, mixed> */
-        return $body['data'] ?? [];
-    }
-
-    /**
-     * Throw an exception if the response indicates an error.
-     *
-     * @param  int  $statusCode  HTTP status code
-     * @param  array<string, mixed>  $body  Response body
-     *
-     * @throws ClientException
-     */
-    private function throwIfError(int $statusCode, array $body): void
-    {
-        if ($statusCode >= 200 && $statusCode < 300) {
-            return;
-        }
-
-        $message = $body['message'] ?? 'An error occurred';
-
-        throw new ClientException($message, $statusCode, $body);
-    }
+    public function getWebhookLogs(string $webhookId, int $page = 1, int $perPage = 15): array;
 }
