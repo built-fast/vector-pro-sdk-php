@@ -1,7 +1,7 @@
 <?php
 
 declare(strict_types=1);
-use App\Commands\VectorCommand;
+
 use Illuminate\Console\Scheduling\ScheduleFinishCommand;
 use Illuminate\Console\Scheduling\ScheduleListCommand;
 use Illuminate\Console\Scheduling\ScheduleRunCommand;
@@ -24,7 +24,7 @@ return [
     |
     */
 
-    'default' => VectorCommand::class,
+    'default' => SummaryCommand::class,
 
     /*
     |--------------------------------------------------------------------------
@@ -66,7 +66,6 @@ return [
     */
 
     'hidden' => [
-        SummaryCommand::class,
         DumpCompletionCommand::class,
         HelpCommand::class,
         ScheduleRunCommand::class,

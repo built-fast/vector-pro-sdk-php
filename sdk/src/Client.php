@@ -14,7 +14,7 @@ use VectorPro\Sdk\Exceptions\ClientException;
 
 final class Client implements ClientInterface
 {
-    private const DEFAULT_BASE_URL = 'https://api.vector.pro';
+    private const DEFAULT_BASE_URL = 'https://api.builtfast.com';
 
     private HttpClientInterface $httpClient;
 
