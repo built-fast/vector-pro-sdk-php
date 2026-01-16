@@ -1,5 +1,5 @@
 {
-    "name": "priddle/vector-cli",
+    "name": "built-fast/vector-pro-cli",
     "description": "Vector CLI",
     "keywords": ["cli", "vector"],
     "type": "project",
@@ -12,6 +12,7 @@
     ],
     "require": {
         "php": "^8.3",
+        "built-fast/vector-pro-sdk": "@dev",
         "laravel-zero/framework": "^12.0.4"
     },
     "require-dev": {
@@ -41,6 +42,12 @@
             "pestphp/pest-plugin": true
         }
     },
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../sdk"
+        }
+    ],
     "minimum-stability": "stable",
     "prefer-stable": true,
     "bin": ["vector"]

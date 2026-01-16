@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6d0ba39c3df2978e29e936309ec5513e",
+    "content-hash": "6351bf12dc1fdaa724471044f3e81ae5",
     "packages": [
         {
             "name": "brick/math",
@@ -65,6 +65,45 @@
                 }
             ],
             "time": "2025-11-24T14:40:29+00:00"
+        },
+        {
+            "name": "built-fast/vector-pro-sdk",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "../sdk",
+                "reference": "716ba988d24bb65a65a55166daf6aa8d6b4b996e"
+            },
+            "require": {
+                "php": "^8.3"
+            },
+            "require-dev": {
+                "pestphp/pest": "^4.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "VectorPro\\Sdk\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "VectorPro\\Sdk\\Tests\\": "tests/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Joshua Priddle",
+                    "email": "jpriddle@me.com"
+                }
+            ],
+            "description": "Vector Pro SDK",
+            "transport-options": {
+                "relative": true
+            }
         },
         {
             "name": "carbonphp/carbon-doctrine-types",
@@ -9136,7 +9175,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {},
+    "stability-flags": {
+        "built-fast/vector-pro-sdk": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {

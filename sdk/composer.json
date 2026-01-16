@@ -1,0 +1,36 @@
+{
+    "name": "built-fast/vector-pro-sdk",
+    "description": "Vector Pro SDK",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Joshua Priddle",
+            "email": "jpriddle@me.com"
+        }
+    ],
+    "require": {
+        "php": "^8.3"
+    },
+    "require-dev": {
+        "pestphp/pest": "^4.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "VectorPro\\Sdk\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "VectorPro\\Sdk\\Tests\\": "tests/"
+        }
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}
