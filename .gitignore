@@ -1,9 +1,10 @@
 /vendor
-/builds
-/.idea
-/.vscode
-/.vagrant
+/composer.lock
+/coverage
 .phpunit.cache
 .phpunit.result.cache
+.pest
 .DS_Store
+.idea
+.vscode
 .envrc

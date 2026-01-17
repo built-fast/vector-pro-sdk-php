@@ -33,6 +33,11 @@
             "VectorPro\\Sdk\\Tests\\": "tests/"
         }
     },
+    "scripts": {
+        "test": "pest",
+        "fix": "pint",
+        "stan": "phpstan analyse"
+    },
     "config": {
         "sort-packages": true,
         "allow-plugins": {
