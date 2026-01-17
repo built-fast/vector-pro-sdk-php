@@ -1,6 +1,6 @@
 # Vector Pro
 
-PHP SDK and CLI for the [Vector Pro](https://vectorpro.dev) hosting platform by [BuiltFast](https://builtfast.com).
+PHP SDK and CLI for the Vector Pro hosting platform by [BuiltFast](https://builtfast.com).
 
 ## Packages
 
