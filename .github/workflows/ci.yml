@@ -49,7 +49,8 @@ jobs:
         working-directory: cli
 
       - name: Execute PHPStan
-        run: ./vendor/bin/phpstan analyse         working-directory: cli
+        run: ./vendor/bin/phpstan analyse
+        working-directory: cli
 
       - name: Execute Tests
         run: ./vendor/bin/pest
@@ -97,7 +98,8 @@ jobs:
         working-directory: sdk
 
       - name: Execute PHPStan
-        run: ./vendor/bin/phpstan analyse         working-directory: sdk
+        run: ./vendor/bin/phpstan analyse
+        working-directory: sdk
 
       - name: Execute Tests
         run: ./vendor/bin/pest
