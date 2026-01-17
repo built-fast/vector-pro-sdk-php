@@ -32,7 +32,7 @@ describe('Client', function () {
 
             $this->mockRequestFactory->shouldReceive('createRequest')
                 ->once()
-                ->with('GET', 'https://api.vector.pro/api/v1/vector/sites?page=1&per_page=15')
+                ->with('GET', 'https://api.builtfast.com/api/v1/vector/sites?page=1&per_page=15')
                 ->andReturn($this->mockRequest);
 
             setupRequestHeaders($this->mockRequest);
@@ -53,7 +53,7 @@ describe('Client', function () {
 
             $this->mockRequestFactory->shouldReceive('createRequest')
                 ->once()
-                ->with('GET', 'https://api.vector.pro/api/v1/vector/sites/site_123')
+                ->with('GET', 'https://api.builtfast.com/api/v1/vector/sites/site_123')
                 ->andReturn($this->mockRequest);
 
             setupRequestHeaders($this->mockRequest);
@@ -75,7 +75,7 @@ describe('Client', function () {
 
             $this->mockRequestFactory->shouldReceive('createRequest')
                 ->once()
-                ->with('POST', 'https://api.vector.pro/api/v1/vector/sites')
+                ->with('POST', 'https://api.builtfast.com/api/v1/vector/sites')
                 ->andReturn($this->mockRequest);
 
             setupRequestHeaders($this->mockRequest);
@@ -97,7 +97,7 @@ describe('Client', function () {
 
             $this->mockRequestFactory->shouldReceive('createRequest')
                 ->once()
-                ->with('PUT', 'https://api.vector.pro/api/v1/vector/sites/site_123/suspend')
+                ->with('PUT', 'https://api.builtfast.com/api/v1/vector/sites/site_123/suspend')
                 ->andReturn($this->mockRequest);
 
             setupRequestHeaders($this->mockRequest);
@@ -120,7 +120,7 @@ describe('Client', function () {
 
             $this->mockRequestFactory->shouldReceive('createRequest')
                 ->once()
-                ->with('GET', 'https://api.vector.pro/api/v1/vector/sites/site_123/environments?page=1&per_page=15')
+                ->with('GET', 'https://api.builtfast.com/api/v1/vector/sites/site_123/environments?page=1&per_page=15')
                 ->andReturn($this->mockRequest);
 
             setupRequestHeaders($this->mockRequest);
@@ -142,7 +142,7 @@ describe('Client', function () {
 
             $this->mockRequestFactory->shouldReceive('createRequest')
                 ->once()
-                ->with('POST', 'https://api.vector.pro/api/v1/vector/sites/site_123/environments')
+                ->with('POST', 'https://api.builtfast.com/api/v1/vector/sites/site_123/environments')
                 ->andReturn($this->mockRequest);
 
             setupRequestHeaders($this->mockRequest);
@@ -166,7 +166,7 @@ describe('Client', function () {
 
             $this->mockRequestFactory->shouldReceive('createRequest')
                 ->once()
-                ->with('POST', 'https://api.vector.pro/api/v1/vector/sites/site_123/environments/env_123/deployments')
+                ->with('POST', 'https://api.builtfast.com/api/v1/vector/sites/site_123/environments/env_123/deployments')
                 ->andReturn($this->mockRequest);
 
             setupRequestHeaders($this->mockRequest);
@@ -187,7 +187,7 @@ describe('Client', function () {
 
             $this->mockRequestFactory->shouldReceive('createRequest')
                 ->once()
-                ->with('POST', 'https://api.vector.pro/api/v1/vector/sites/site_123/environments/env_123/deployments/deploy_123/rollback')
+                ->with('POST', 'https://api.builtfast.com/api/v1/vector/sites/site_123/environments/env_123/deployments/deploy_123/rollback')
                 ->andReturn($this->mockRequest);
 
             setupRequestHeaders($this->mockRequest);
@@ -210,7 +210,7 @@ describe('Client', function () {
 
             $this->mockRequestFactory->shouldReceive('createRequest')
                 ->once()
-                ->with('GET', 'https://api.vector.pro/api/v1/vector/sites/site_123/waf/blocked-ips')
+                ->with('GET', 'https://api.builtfast.com/api/v1/vector/sites/site_123/waf/blocked-ips')
                 ->andReturn($this->mockRequest);
 
             setupRequestHeaders($this->mockRequest);
@@ -232,7 +232,7 @@ describe('Client', function () {
 
             $this->mockRequestFactory->shouldReceive('createRequest')
                 ->once()
-                ->with('POST', 'https://api.vector.pro/api/v1/vector/sites/site_123/waf/blocked-ips')
+                ->with('POST', 'https://api.builtfast.com/api/v1/vector/sites/site_123/waf/blocked-ips')
                 ->andReturn($this->mockRequest);
 
             setupRequestHeaders($this->mockRequest);
@@ -445,7 +445,7 @@ describe('Client', function () {
 
             $this->mockRequestFactory->shouldReceive('createRequest')
                 ->once()
-                ->with('GET', 'https://api.vector.pro/api/v1/vector/php-versions')
+                ->with('GET', 'https://api.builtfast.com/api/v1/vector/php-versions')
                 ->andReturn($this->mockRequest);
 
             setupRequestHeaders($this->mockRequest);
@@ -466,7 +466,7 @@ describe('Client', function () {
 
             $this->mockRequestFactory->shouldReceive('createRequest')
                 ->once()
-                ->with('GET', 'https://api.vector.pro/api/v1/vector/events?page=2&per_page=25')
+                ->with('GET', 'https://api.builtfast.com/api/v1/vector/events?page=2&per_page=25')
                 ->andReturn($this->mockRequest);
 
             setupRequestHeaders($this->mockRequest);
