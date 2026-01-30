@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace VectorPro\Api\Sites;
 
 use VectorPro\HttpClient;
+use VectorPro\Response\ExportStatus;
+use VectorPro\Response\ImportStatus;
 
 final class DatabaseApi
 {
@@ -18,63 +20,66 @@ final class DatabaseApi
      * Import a database directly from a URL.
      *
      * @param  array{url: string, search_replace?: array<array{search: string, replace: string}>}  $data
-     * @return array<string, mixed>
      */
-    public function import(string $siteId, array $data): array
+    public function import(string $siteId, array $data): ImportStatus
     {
-        return $this->http->post(self::BASE_PATH."/{$siteId}/db/import", $data);
+        $response = $this->http->post(self::BASE_PATH."/{$siteId}/db/import", $data);
+
+        return ImportStatus::fromArray($response);
     }
 
     /**
      * Create a database import session for uploading a file.
      *
      * @param  array{filename: string, search_replace?: array<array{search: string, replace: string}>}  $data
-     * @return array<string, mixed>
      */
-    public function createImportSession(string $siteId, array $data): array
+    public function createImportSession(string $siteId, array $data): ImportStatus
     {
-        return $this->http->post(self::BASE_PATH."/{$siteId}/db/imports", $data);
+        $response = $this->http->post(self::BASE_PATH."/{$siteId}/db/imports", $data);
+
+        return ImportStatus::fromArray($response);
     }
 
     /**
      * Run a previously created import session.
-     *
-     * @return array<string, mixed>
      */
-    public function runImport(string $siteId, string $importId): array
+    public function runImport(string $siteId, string $importId): ImportStatus
     {
-        return $this->http->post(self::BASE_PATH."/{$siteId}/db/imports/{$importId}/run");
+        $response = $this->http->post(self::BASE_PATH."/{$siteId}/db/imports/{$importId}/run");
+
+        return ImportStatus::fromArray($response);
     }
 
     /**
      * Get the status of a database import.
-     *
-     * @return array<string, mixed>
      */
-    public function getImportStatus(string $siteId, string $importId): array
+    public function getImportStatus(string $siteId, string $importId): ImportStatus
     {
-        return $this->http->get(self::BASE_PATH."/{$siteId}/db/imports/{$importId}");
+        $response = $this->http->get(self::BASE_PATH."/{$siteId}/db/imports/{$importId}");
+
+        return ImportStatus::fromArray($response);
     }
 
     /**
      * Create a database export.
      *
      * @param  array{format?: string}  $data
-     * @return array<string, mixed>
      */
-    public function createExport(string $siteId, array $data = []): array
+    public function createExport(string $siteId, array $data = []): ExportStatus
     {
-        return $this->http->post(self::BASE_PATH."/{$siteId}/db/export", $data);
+        $response = $this->http->post(self::BASE_PATH."/{$siteId}/db/export", $data);
+
+        return ExportStatus::fromArray($response);
     }
 
     /**
      * Get the status of a database export.
-     *
-     * @return array<string, mixed>
      */
-    public function getExportStatus(string $siteId, string $exportId): array
+    public function getExportStatus(string $siteId, string $exportId): ExportStatus
     {
-        return $this->http->get(self::BASE_PATH."/{$siteId}/db/exports/{$exportId}");
+        $response = $this->http->get(self::BASE_PATH."/{$siteId}/db/exports/{$exportId}");
+
+        return ExportStatus::fromArray($response);
     }
 
     /**

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace VectorPro\Api\Account;
 
 use VectorPro\HttpClient;
+use VectorPro\Response\SshKey;
 
 final class SshKeysApi
 {
@@ -17,32 +18,35 @@ final class SshKeysApi
     /**
      * List account SSH keys.
      *
-     * @return array<string, mixed>
+     * @return SshKey[]
      */
     public function list(): array
     {
-        return $this->http->get(self::BASE_PATH);
+        $response = $this->http->get(self::BASE_PATH);
+
+        return array_map(SshKey::fromArray(...), $response['data'] ?? $response);
     }
 
     /**
      * Create an SSH key.
      *
      * @param  array{name: string, public_key: string}  $data
-     * @return array<string, mixed>
      */
-    public function create(array $data): array
+    public function create(array $data): SshKey
     {
-        return $this->http->post(self::BASE_PATH, $data);
+        $response = $this->http->post(self::BASE_PATH, $data);
+
+        return SshKey::fromArray($response);
     }
 
     /**
      * Get an SSH key.
-     *
-     * @return array<string, mixed>
      */
-    public function get(string $keyId): array
+    public function get(string $keyId): SshKey
     {
-        return $this->http->get(self::BASE_PATH."/{$keyId}");
+        $response = $this->http->get(self::BASE_PATH."/{$keyId}");
+
+        return SshKey::fromArray($response);
     }
 
     /**

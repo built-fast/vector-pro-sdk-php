@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace VectorPro\Api\Environments;
 
 use VectorPro\HttpClient;
+use VectorPro\Response\Deployment;
+use VectorPro\Response\PaginatedResponse;
 
 final class DeploymentsApi
 {
@@ -18,53 +20,57 @@ final class DeploymentsApi
      * List deployments for an environment.
      *
      * @param  array{per_page?: int, page?: int}  $options
-     * @return array<string, mixed>
+     * @return PaginatedResponse<Deployment>
      */
-    public function list(string $siteId, string $environmentId, array $options = []): array
+    public function list(string $siteId, string $environmentId, array $options = []): PaginatedResponse
     {
-        return $this->http->get(
+        $response = $this->http->get(
             self::BASE_PATH."/{$siteId}/environments/{$environmentId}/deployments",
             $options
         );
+
+        return PaginatedResponse::fromArray($response, Deployment::fromArray(...));
     }
 
     /**
      * Create a deployment for an environment.
      *
      * @param  array{description?: string}  $data
-     * @return array<string, mixed>
      */
-    public function create(string $siteId, string $environmentId, array $data = []): array
+    public function create(string $siteId, string $environmentId, array $data = []): Deployment
     {
-        return $this->http->post(
+        $response = $this->http->post(
             self::BASE_PATH."/{$siteId}/environments/{$environmentId}/deployments",
             $data
         );
+
+        return Deployment::fromArray($response);
     }
 
     /**
      * Get a deployment.
-     *
-     * @return array<string, mixed>
      */
-    public function get(string $siteId, string $environmentId, string $deploymentId): array
+    public function get(string $siteId, string $environmentId, string $deploymentId): Deployment
     {
-        return $this->http->get(
+        $response = $this->http->get(
             self::BASE_PATH."/{$siteId}/environments/{$environmentId}/deployments/{$deploymentId}"
         );
+
+        return Deployment::fromArray($response);
     }
 
     /**
      * Rollback to a previous deployment.
      *
      * @param  array{deployment_id: string}  $data
-     * @return array<string, mixed>
      */
-    public function rollback(string $siteId, string $environmentId, array $data): array
+    public function rollback(string $siteId, string $environmentId, array $data): Deployment
     {
-        return $this->http->post(
+        $response = $this->http->post(
             self::BASE_PATH."/{$siteId}/environments/{$environmentId}/rollback",
             $data
         );
+
+        return Deployment::fromArray($response);
     }
 }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace VectorPro\Api\Account;
 
 use VectorPro\HttpClient;
+use VectorPro\Response\Secret;
 
 final class SecretsApi
 {
@@ -17,43 +18,47 @@ final class SecretsApi
     /**
      * List global secrets.
      *
-     * @return array<string, mixed>
+     * @return Secret[]
      */
     public function list(): array
     {
-        return $this->http->get(self::BASE_PATH);
+        $response = $this->http->get(self::BASE_PATH);
+
+        return array_map(Secret::fromArray(...), $response['data'] ?? $response);
     }
 
     /**
      * Create a global secret.
      *
      * @param  array{name: string, value: string}  $data
-     * @return array<string, mixed>
      */
-    public function create(array $data): array
+    public function create(array $data): Secret
     {
-        return $this->http->post(self::BASE_PATH, $data);
+        $response = $this->http->post(self::BASE_PATH, $data);
+
+        return Secret::fromArray($response);
     }
 
     /**
      * Get a global secret.
-     *
-     * @return array<string, mixed>
      */
-    public function get(string $secretId): array
+    public function get(string $secretId): Secret
     {
-        return $this->http->get(self::BASE_PATH."/{$secretId}");
+        $response = $this->http->get(self::BASE_PATH."/{$secretId}");
+
+        return Secret::fromArray($response);
     }
 
     /**
      * Update a global secret.
      *
      * @param  array{value: string}  $data
-     * @return array<string, mixed>
      */
-    public function update(string $secretId, array $data): array
+    public function update(string $secretId, array $data): Secret
     {
-        return $this->http->put(self::BASE_PATH."/{$secretId}", $data);
+        $response = $this->http->put(self::BASE_PATH."/{$secretId}", $data);
+
+        return Secret::fromArray($response);
     }
 
     /**

@@ -9,6 +9,8 @@ use VectorPro\Api\Sites\SshKeysApi;
 use VectorPro\Api\Sites\SslApi;
 use VectorPro\Api\Sites\WafApi;
 use VectorPro\HttpClient;
+use VectorPro\Response\PaginatedResponse;
+use VectorPro\Response\Site;
 
 final class SitesApi
 {
@@ -35,43 +37,47 @@ final class SitesApi
      * List all sites.
      *
      * @param  array{per_page?: int, page?: int}  $options
-     * @return array<string, mixed>
+     * @return PaginatedResponse<Site>
      */
-    public function list(array $options = []): array
+    public function list(array $options = []): PaginatedResponse
     {
-        return $this->http->get(self::BASE_PATH, $options);
+        $response = $this->http->get(self::BASE_PATH, $options);
+
+        return PaginatedResponse::fromArray($response, Site::fromArray(...));
     }
 
     /**
      * Get a site by ID.
-     *
-     * @return array<string, mixed>
      */
-    public function get(string $siteId): array
+    public function get(string $siteId): Site
     {
-        return $this->http->get(self::BASE_PATH."/{$siteId}");
+        $response = $this->http->get(self::BASE_PATH."/{$siteId}");
+
+        return Site::fromArray($response);
     }
 
     /**
      * Create a new site.
      *
      * @param  array{partner_customer_id: string, dev_php_version: string, tags?: string[]}  $data
-     * @return array<string, mixed>
      */
-    public function create(array $data): array
+    public function create(array $data): Site
     {
-        return $this->http->post(self::BASE_PATH, $data);
+        $response = $this->http->post(self::BASE_PATH, $data);
+
+        return Site::fromArray($response);
     }
 
     /**
      * Update a site.
      *
      * @param  array{partner_customer_id?: string, dev_php_version?: string, tags?: string[]}  $data
-     * @return array<string, mixed>
      */
-    public function update(string $siteId, array $data): array
+    public function update(string $siteId, array $data): Site
     {
-        return $this->http->put(self::BASE_PATH."/{$siteId}", $data);
+        $response = $this->http->put(self::BASE_PATH."/{$siteId}", $data);
+
+        return Site::fromArray($response);
     }
 
     /**
@@ -88,11 +94,12 @@ final class SitesApi
      * Clone a site.
      *
      * @param  array{partner_customer_id?: string}|null  $data
-     * @return array<string, mixed>
      */
-    public function clone(string $siteId, ?array $data = null): array
+    public function clone(string $siteId, ?array $data = null): Site
     {
-        return $this->http->post(self::BASE_PATH."/{$siteId}/clone", $data ?? []);
+        $response = $this->http->post(self::BASE_PATH."/{$siteId}/clone", $data ?? []);
+
+        return Site::fromArray($response);
     }
 
     /**

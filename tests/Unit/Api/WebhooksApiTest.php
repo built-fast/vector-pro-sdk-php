@@ -4,30 +4,53 @@ declare(strict_types=1);
 
 use Psr\Http\Message\RequestInterface;
 use VectorPro\Api\WebhooksApi;
+use VectorPro\Response\Webhook;
 
 describe('WebhooksApi', function () {
     it('lists webhooks', function () {
-        $http = createHttpClient(['data' => []], function (RequestInterface $request) {
+        $http = createHttpClient([
+            'data' => [
+                ['id' => 'hook-1', 'url' => 'https://example.com/webhook', 'events' => ['site.created']],
+            ],
+        ], function (RequestInterface $request) {
             expect($request->getMethod())->toBe('GET');
             expect($request->getUri()->getPath())->toBe('/api/v1/vector/webhooks');
         });
 
         $api = new WebhooksApi($http);
-        $api->list();
+        $result = $api->list();
+
+        expect($result)->toBeArray();
+        expect($result)->toHaveCount(1);
+        expect($result[0])->toBeInstanceOf(Webhook::class);
     });
 
     it('gets a webhook', function () {
-        $http = createHttpClient(['id' => 'hook-123'], function (RequestInterface $request) {
+        $http = createHttpClient([
+            'id' => 'hook-123',
+            'url' => 'https://example.com/webhook',
+            'events' => ['site.created'],
+            'enabled' => true,
+        ], function (RequestInterface $request) {
             expect($request->getMethod())->toBe('GET');
             expect($request->getUri()->getPath())->toBe('/api/v1/vector/webhooks/hook-123');
         });
 
         $api = new WebhooksApi($http);
-        $api->get('hook-123');
+        $result = $api->get('hook-123');
+
+        expect($result)->toBeInstanceOf(Webhook::class);
+        expect($result->id)->toBe('hook-123');
     });
 
     it('creates a webhook', function () {
-        $http = createHttpClient(['id' => 'hook-123'], function (RequestInterface $request) {
+        $http = createHttpClient([
+            'id' => 'hook-123',
+            'url' => 'https://example.com/webhook',
+            'events' => ['site.created'],
+            'enabled' => true,
+            'secret' => 'whsec_123',
+        ], function (RequestInterface $request) {
             expect($request->getMethod())->toBe('POST');
             expect($request->getUri()->getPath())->toBe('/api/v1/vector/webhooks');
             $body = json_decode($request->getBody()->getContents(), true);
@@ -36,11 +59,20 @@ describe('WebhooksApi', function () {
         });
 
         $api = new WebhooksApi($http);
-        $api->create(['url' => 'https://example.com/webhook', 'events' => ['site.created']]);
+        $result = $api->create(['url' => 'https://example.com/webhook', 'events' => ['site.created']]);
+
+        expect($result)->toBeInstanceOf(Webhook::class);
+        expect($result->id)->toBe('hook-123');
+        expect($result->secret)->toBe('whsec_123');
     });
 
     it('updates a webhook', function () {
-        $http = createHttpClient([], function (RequestInterface $request) {
+        $http = createHttpClient([
+            'id' => 'hook-123',
+            'url' => 'https://example.com/webhook',
+            'events' => ['site.created'],
+            'enabled' => false,
+        ], function (RequestInterface $request) {
             expect($request->getMethod())->toBe('PUT');
             expect($request->getUri()->getPath())->toBe('/api/v1/vector/webhooks/hook-123');
             $body = json_decode($request->getBody()->getContents(), true);
@@ -48,7 +80,10 @@ describe('WebhooksApi', function () {
         });
 
         $api = new WebhooksApi($http);
-        $api->update('hook-123', ['enabled' => false]);
+        $result = $api->update('hook-123', ['enabled' => false]);
+
+        expect($result)->toBeInstanceOf(Webhook::class);
+        expect($result->enabled)->toBe(false);
     });
 
     it('deletes a webhook', function () {
@@ -81,12 +116,21 @@ describe('WebhooksApi', function () {
     });
 
     it('rotates webhook secret', function () {
-        $http = createHttpClient(['secret' => 'new-secret'], function (RequestInterface $request) {
+        $http = createHttpClient([
+            'id' => 'hook-123',
+            'url' => 'https://example.com/webhook',
+            'events' => ['site.created'],
+            'enabled' => true,
+            'secret' => 'new-secret',
+        ], function (RequestInterface $request) {
             expect($request->getMethod())->toBe('POST');
             expect($request->getUri()->getPath())->toBe('/api/v1/vector/webhooks/hook-123/rotate-secret');
         });
 
         $api = new WebhooksApi($http);
-        $api->rotateSecret('hook-123');
+        $result = $api->rotateSecret('hook-123');
+
+        expect($result)->toBeInstanceOf(Webhook::class);
+        expect($result->secret)->toBe('new-secret');
     });
 });

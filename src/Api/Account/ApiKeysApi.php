@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace VectorPro\Api\Account;
 
 use VectorPro\HttpClient;
+use VectorPro\Response\ApiKey;
 
 final class ApiKeysApi
 {
@@ -17,22 +18,25 @@ final class ApiKeysApi
     /**
      * List API keys.
      *
-     * @return array<string, mixed>
+     * @return ApiKey[]
      */
     public function list(): array
     {
-        return $this->http->get(self::BASE_PATH);
+        $response = $this->http->get(self::BASE_PATH);
+
+        return array_map(ApiKey::fromArray(...), $response['data'] ?? $response);
     }
 
     /**
      * Create an API key.
      *
      * @param  array{name: string, scopes?: string[]}  $data
-     * @return array<string, mixed>
      */
-    public function create(array $data): array
+    public function create(array $data): ApiKey
     {
-        return $this->http->post(self::BASE_PATH, $data);
+        $response = $this->http->post(self::BASE_PATH, $data);
+
+        return ApiKey::fromArray($response);
     }
 
     /**

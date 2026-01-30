@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace VectorPro\Api\Environments;
 
 use VectorPro\HttpClient;
+use VectorPro\Response\Secret;
 
 final class SecretsApi
 {
@@ -17,53 +18,57 @@ final class SecretsApi
     /**
      * List secrets for an environment.
      *
-     * @return array<string, mixed>
+     * @return Secret[]
      */
     public function list(string $siteId, string $environmentId): array
     {
-        return $this->http->get(
+        $response = $this->http->get(
             self::BASE_PATH."/{$siteId}/environments/{$environmentId}/secrets"
         );
+
+        return array_map(Secret::fromArray(...), $response['data'] ?? $response);
     }
 
     /**
      * Create a secret for an environment.
      *
      * @param  array{name: string, value: string}  $data
-     * @return array<string, mixed>
      */
-    public function create(string $siteId, string $environmentId, array $data): array
+    public function create(string $siteId, string $environmentId, array $data): Secret
     {
-        return $this->http->post(
+        $response = $this->http->post(
             self::BASE_PATH."/{$siteId}/environments/{$environmentId}/secrets",
             $data
         );
+
+        return Secret::fromArray($response);
     }
 
     /**
      * Get a secret.
-     *
-     * @return array<string, mixed>
      */
-    public function get(string $siteId, string $environmentId, string $secretId): array
+    public function get(string $siteId, string $environmentId, string $secretId): Secret
     {
-        return $this->http->get(
+        $response = $this->http->get(
             self::BASE_PATH."/{$siteId}/environments/{$environmentId}/secrets/{$secretId}"
         );
+
+        return Secret::fromArray($response);
     }
 
     /**
      * Update a secret.
      *
      * @param  array{value: string}  $data
-     * @return array<string, mixed>
      */
-    public function update(string $siteId, string $environmentId, string $secretId, array $data): array
+    public function update(string $siteId, string $environmentId, string $secretId, array $data): Secret
     {
-        return $this->http->put(
+        $response = $this->http->put(
             self::BASE_PATH."/{$siteId}/environments/{$environmentId}/secrets/{$secretId}",
             $data
         );
+
+        return Secret::fromArray($response);
     }
 
     /**

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace VectorPro\Api\Sites;
 
 use VectorPro\HttpClient;
+use VectorPro\Response\SslStatus;
 
 final class SslApi
 {
@@ -16,12 +17,12 @@ final class SslApi
 
     /**
      * Get SSL status for an environment.
-     *
-     * @return array<string, mixed>
      */
-    public function getStatus(string $siteId, string $environmentId): array
+    public function getStatus(string $siteId, string $environmentId): SslStatus
     {
-        return $this->http->get(self::BASE_PATH."/{$siteId}/environments/{$environmentId}/ssl");
+        $response = $this->http->get(self::BASE_PATH."/{$siteId}/environments/{$environmentId}/ssl");
+
+        return SslStatus::fromArray($response);
     }
 
     /**

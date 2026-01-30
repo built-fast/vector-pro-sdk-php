@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace VectorPro\Api;
 
 use VectorPro\HttpClient;
+use VectorPro\Response\Webhook;
 
 final class WebhooksApi
 {
@@ -17,43 +18,47 @@ final class WebhooksApi
     /**
      * List webhooks.
      *
-     * @return array<string, mixed>
+     * @return Webhook[]
      */
     public function list(): array
     {
-        return $this->http->get(self::BASE_PATH);
+        $response = $this->http->get(self::BASE_PATH);
+
+        return array_map(Webhook::fromArray(...), $response['data'] ?? $response);
     }
 
     /**
      * Get a webhook.
-     *
-     * @return array<string, mixed>
      */
-    public function get(string $webhookId): array
+    public function get(string $webhookId): Webhook
     {
-        return $this->http->get(self::BASE_PATH."/{$webhookId}");
+        $response = $this->http->get(self::BASE_PATH."/{$webhookId}");
+
+        return Webhook::fromArray($response);
     }
 
     /**
      * Create a webhook.
      *
      * @param  array{url: string, events: string[], type?: string}  $data
-     * @return array<string, mixed>
      */
-    public function create(array $data): array
+    public function create(array $data): Webhook
     {
-        return $this->http->post(self::BASE_PATH, $data);
+        $response = $this->http->post(self::BASE_PATH, $data);
+
+        return Webhook::fromArray($response);
     }
 
     /**
      * Update a webhook.
      *
      * @param  array{url?: string, events?: string[], enabled?: bool}  $data
-     * @return array<string, mixed>
      */
-    public function update(string $webhookId, array $data): array
+    public function update(string $webhookId, array $data): Webhook
     {
-        return $this->http->put(self::BASE_PATH."/{$webhookId}", $data);
+        $response = $this->http->put(self::BASE_PATH."/{$webhookId}", $data);
+
+        return Webhook::fromArray($response);
     }
 
     /**
@@ -79,11 +84,11 @@ final class WebhooksApi
 
     /**
      * Rotate webhook secret.
-     *
-     * @return array<string, mixed>
      */
-    public function rotateSecret(string $webhookId): array
+    public function rotateSecret(string $webhookId): Webhook
     {
-        return $this->http->post(self::BASE_PATH."/{$webhookId}/rotate-secret");
+        $response = $this->http->post(self::BASE_PATH."/{$webhookId}/rotate-secret");
+
+        return Webhook::fromArray($response);
     }
 }

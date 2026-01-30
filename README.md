@@ -39,11 +39,44 @@ $client = new VectorProClient(
     $factory,
 );
 
-// List all sites
-$sites = $client->sites->list();
+// List all sites (returns PaginatedResponse<Site>)
+$response = $client->sites->list();
+foreach ($response->data as $site) {
+    echo $site->id . ': ' . $site->partner_customer_id . "\n";
+}
 
-// Get a specific site
+// Get a specific site (returns Site)
 $site = $client->sites->get('site-id');
+echo $site->dev_php_version; // '8.3'
+```
+
+## Response Objects
+
+All API methods return typed response objects for IDE autocomplete and type safety:
+
+```php
+use VectorPro\Response\Site;
+use VectorPro\Response\Environment;
+use VectorPro\Response\Deployment;
+use VectorPro\Response\PaginatedResponse;
+
+// Site properties
+$site = $client->sites->get('site-id');
+$site->id;                  // string
+$site->partner_customer_id; // string
+$site->dev_php_version;     // string
+$site->tags;                // string[]
+$site->status;              // ?string
+$site->created_at;          // ?string
+$site->updated_at;          // ?string
+
+// Paginated responses
+$response = $client->sites->list(['per_page' => 10, 'page' => 2]);
+$response->data;         // Site[]
+$response->current_page; // int
+$response->per_page;     // int
+$response->total;        // int
+$response->last_page;    // int
 ```
 
 ## API Reference
@@ -51,12 +84,17 @@ $site = $client->sites->get('site-id');
 ### Sites
 
 ```php
+// Returns PaginatedResponse<Site>
 $client->sites->list(['per_page' => 10, 'page' => 1]);
+
+// Returns Site
 $client->sites->get('site-id');
 $client->sites->create(['partner_customer_id' => 'cust-123', 'dev_php_version' => '8.3']);
 $client->sites->update('site-id', ['tags' => ['production']]);
-$client->sites->delete('site-id');
 $client->sites->clone('site-id');
+
+// Returns array
+$client->sites->delete('site-id');
 $client->sites->suspend('site-id');
 $client->sites->unsuspend('site-id');
 $client->sites->resetSftpPassword('site-id');
@@ -67,7 +105,10 @@ $client->sites->purgeCache('site-id', ['paths' => ['/wp-content/*']]);
 ### Environments
 
 ```php
+// Returns Environment[]
 $client->environments->list('site-id');
+
+// Returns Environment
 $client->environments->get('site-id', 'env-id');
 $client->environments->create('site-id', [
     'name' => 'staging',
@@ -75,6 +116,8 @@ $client->environments->create('site-id', [
     'is_production' => false,
 ]);
 $client->environments->update('site-id', 'env-id', ['php_version' => '8.2']);
+
+// Returns array
 $client->environments->delete('site-id', 'env-id');
 $client->environments->resetDatabasePassword('site-id', 'env-id');
 ```
@@ -82,7 +125,10 @@ $client->environments->resetDatabasePassword('site-id', 'env-id');
 ### Deployments
 
 ```php
+// Returns PaginatedResponse<Deployment>
 $client->environments->deployments->list('site-id', 'env-id');
+
+// Returns Deployment
 $client->environments->deployments->create('site-id', 'env-id', ['description' => 'Release v1.0']);
 $client->environments->deployments->get('site-id', 'env-id', 'deployment-id');
 $client->environments->deployments->rollback('site-id', 'env-id', ['deployment_id' => 'prev-id']);
@@ -91,6 +137,7 @@ $client->environments->deployments->rollback('site-id', 'env-id', ['deployment_i
 ### Database
 
 ```php
+// Returns ImportStatus
 $client->sites->db->import('site-id', [
     'url' => 'https://example.com/backup.sql.gz',
     'search_replace' => [
@@ -100,8 +147,12 @@ $client->sites->db->import('site-id', [
 $client->sites->db->createImportSession('site-id', ['filename' => 'backup.sql']);
 $client->sites->db->runImport('site-id', 'import-id');
 $client->sites->db->getImportStatus('site-id', 'import-id');
+
+// Returns ExportStatus
 $client->sites->db->createExport('site-id', ['format' => 'sql']);
 $client->sites->db->getExportStatus('site-id', 'export-id');
+
+// Returns array
 $client->sites->db->resetPassword('site-id');
 ```
 
@@ -138,19 +189,23 @@ $client->sites->waf->deleteRateLimit('site-id', 'rule-id');
 ### SSL
 
 ```php
-$client->sites->ssl->getStatus('site-id');
-$client->sites->ssl->nudge('site-id');
+// Returns SslStatus
+$client->sites->ssl->getStatus('site-id', 'env-id');
+
+// Returns array
+$client->sites->ssl->nudge('site-id', 'env-id');
 ```
 
 ### SSH Keys
 
 ```php
-// Account-level
+// Account-level - Returns SshKey[] or SshKey
 $client->account->sshKeys->list();
 $client->account->sshKeys->create(['name' => 'My Key', 'public_key' => 'ssh-ed25519 ...']);
+$client->account->sshKeys->get('key-id');
 $client->account->sshKeys->delete('key-id');
 
-// Site-level
+// Site-level - Returns array
 $client->sites->sshKeys->list('site-id');
 $client->sites->sshKeys->attach('site-id', ['ssh_key_id' => 'key-id']);
 $client->sites->sshKeys->detach('site-id', 'key-id');
@@ -159,15 +214,17 @@ $client->sites->sshKeys->detach('site-id', 'key-id');
 ### Secrets
 
 ```php
-// Global secrets
+// Global secrets - Returns Secret[] or Secret
 $client->account->secrets->list();
 $client->account->secrets->create(['name' => 'API_KEY', 'value' => 'secret']);
+$client->account->secrets->get('secret-id');
 $client->account->secrets->update('secret-id', ['value' => 'new-secret']);
 $client->account->secrets->delete('secret-id');
 
-// Environment secrets
+// Environment secrets - Returns Secret[] or Secret
 $client->environments->secrets->list('site-id', 'env-id');
 $client->environments->secrets->create('site-id', 'env-id', ['name' => 'DB_HOST', 'value' => 'localhost']);
+$client->environments->secrets->get('site-id', 'env-id', 'secret-id');
 $client->environments->secrets->update('site-id', 'env-id', 'secret-id', ['value' => 'newhost']);
 $client->environments->secrets->delete('site-id', 'env-id', 'secret-id');
 ```
@@ -175,6 +232,7 @@ $client->environments->secrets->delete('site-id', 'env-id', 'secret-id');
 ### Webhooks
 
 ```php
+// Returns Webhook[] or Webhook
 $client->webhooks->list();
 $client->webhooks->get('webhook-id');
 $client->webhooks->create([
@@ -182,16 +240,21 @@ $client->webhooks->create([
     'events' => ['site.created', 'deployment.completed'],
 ]);
 $client->webhooks->update('webhook-id', ['enabled' => false]);
+$client->webhooks->rotateSecret('webhook-id');
+
+// Returns array
 $client->webhooks->delete('webhook-id');
 $client->webhooks->listLogs('webhook-id');
-$client->webhooks->rotateSecret('webhook-id');
 ```
 
 ### API Keys
 
 ```php
+// Returns ApiKey[] or ApiKey
 $client->account->apiKeys->list();
 $client->account->apiKeys->create(['name' => 'CI/CD Key']);
+
+// Returns array
 $client->account->apiKeys->delete('key-id');
 ```
 

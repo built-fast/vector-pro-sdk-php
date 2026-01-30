@@ -7,6 +7,7 @@ namespace VectorPro\Api;
 use VectorPro\Api\Environments\DeploymentsApi;
 use VectorPro\Api\Environments\SecretsApi;
 use VectorPro\HttpClient;
+use VectorPro\Response\Environment;
 
 final class EnvironmentsApi
 {
@@ -26,43 +27,47 @@ final class EnvironmentsApi
     /**
      * List environments for a site.
      *
-     * @return array<string, mixed>
+     * @return Environment[]
      */
     public function list(string $siteId): array
     {
-        return $this->http->get(self::BASE_PATH."/{$siteId}/environments");
+        $response = $this->http->get(self::BASE_PATH."/{$siteId}/environments");
+
+        return array_map(Environment::fromArray(...), $response['data'] ?? $response);
     }
 
     /**
      * Get an environment.
-     *
-     * @return array<string, mixed>
      */
-    public function get(string $siteId, string $environmentId): array
+    public function get(string $siteId, string $environmentId): Environment
     {
-        return $this->http->get(self::BASE_PATH."/{$siteId}/environments/{$environmentId}");
+        $response = $this->http->get(self::BASE_PATH."/{$siteId}/environments/{$environmentId}");
+
+        return Environment::fromArray($response);
     }
 
     /**
      * Create an environment.
      *
      * @param  array{name: string, php_version: string, is_production?: bool, custom_domain?: string}  $data
-     * @return array<string, mixed>
      */
-    public function create(string $siteId, array $data): array
+    public function create(string $siteId, array $data): Environment
     {
-        return $this->http->post(self::BASE_PATH."/{$siteId}/environments", $data);
+        $response = $this->http->post(self::BASE_PATH."/{$siteId}/environments", $data);
+
+        return Environment::fromArray($response);
     }
 
     /**
      * Update an environment.
      *
      * @param  array{php_version?: string, custom_domain?: string}  $data
-     * @return array<string, mixed>
      */
-    public function update(string $siteId, string $environmentId, array $data): array
+    public function update(string $siteId, string $environmentId, array $data): Environment
     {
-        return $this->http->put(self::BASE_PATH."/{$siteId}/environments/{$environmentId}", $data);
+        $response = $this->http->put(self::BASE_PATH."/{$siteId}/environments/{$environmentId}", $data);
+
+        return Environment::fromArray($response);
     }
 
     /**
