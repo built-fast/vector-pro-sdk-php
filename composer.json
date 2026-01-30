@@ -1,50 +1,41 @@
 {
     "name": "built-fast/vector-pro-sdk",
-    "description": "Vector Pro SDK",
+    "description": "PHP SDK for the Vector Pro API",
     "type": "library",
     "license": "MIT",
-    "authors": [
-        {
-            "name": "Joshua Priddle",
-            "email": "jpriddle@me.com"
-        }
-    ],
     "require": {
         "php": "^8.3",
-        "php-http/discovery": "^1.20",
         "psr/http-client": "^1.0",
-        "psr/http-factory": "^1.1"
+        "psr/http-factory": "^1.0",
+        "psr/http-message": "^1.0 || ^2.0"
     },
     "require-dev": {
-        "guzzlehttp/guzzle": "^7.10",
-        "guzzlehttp/psr7": "^2.8",
+        "guzzlehttp/guzzle": "^7.0",
+        "guzzlehttp/psr7": "^2.0",
         "laravel/pint": "^1.27",
         "mockery/mockery": "^1.6",
-        "pestphp/pest": "^4.2",
+        "pestphp/pest": "^3.0",
         "phpstan/phpstan": "^2.1"
+    },
+    "scripts": {
+        "fix": "pint",
+        "stan": "phpstan analyse",
+        "test": "pest"
     },
     "autoload": {
         "psr-4": {
-            "VectorPro\\Sdk\\": "src/"
+            "VectorPro\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "VectorPro\\Sdk\\Tests\\": "tests/"
+            "VectorPro\\Tests\\": "tests/"
         }
-    },
-    "scripts": {
-        "test": "pest",
-        "fix": "pint",
-        "stan": "phpstan analyse"
     },
     "config": {
         "sort-packages": true,
         "allow-plugins": {
-            "pestphp/pest-plugin": true,
-            "php-http/discovery": true
+            "pestphp/pest-plugin": true
         }
-    },
-    "minimum-stability": "stable",
-    "prefer-stable": true
+    }
 }

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace VectorPro\Sdk\Tests;
+namespace VectorPro\Tests;
 
 use PHPUnit\Framework\TestCase as BaseTestCase;
 

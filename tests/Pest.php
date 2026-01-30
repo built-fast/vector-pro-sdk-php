@@ -2,39 +2,53 @@
 
 declare(strict_types=1);
 
-use VectorPro\Sdk\Tests\TestCase;
-
-/*
-|--------------------------------------------------------------------------
-| Test Case
-|--------------------------------------------------------------------------
-|
-| The closure you provide to your test functions is always bound to a specific PHPUnit test
-| case class. By default, that class is "PHPUnit\Framework\TestCase". Of course, you may
-| need to change it using the "pest()" function to bind a different classes or traits.
-|
-*/
+use GuzzleHttp\Psr7\HttpFactory;
+use GuzzleHttp\Psr7\Response;
+use Mockery as m;
+use Psr\Http\Client\ClientInterface;
+use Psr\Http\Message\RequestInterface;
+use VectorPro\HttpClient;
+use VectorPro\Tests\TestCase;
+use VectorPro\VectorProClientConfig;
 
 pest()->extend(TestCase::class)->in(__DIR__);
 
-/*
-|--------------------------------------------------------------------------
-| Expectations
-|--------------------------------------------------------------------------
-|
-| When you're writing tests, you often need to check that values meet certain conditions. The
-| "expect()" function gives you access to a set of "expectations" methods that you can use
-| to assert different things. Of course, you may extend the Expectation API at any time.
-|
-*/
+/**
+ * Create a mock PSR-18 HTTP client that captures and validates requests.
+ *
+ * @param  array<string, mixed>  $responseBody
+ * @param  callable|null  $requestValidator  Callback to validate the request
+ */
+function mockHttpClient(array $responseBody = [], ?callable $requestValidator = null, int $statusCode = 200): ClientInterface
+{
+    $mock = m::mock(ClientInterface::class);
+    $mock->shouldReceive('sendRequest')
+        ->once()
+        ->andReturnUsing(function (RequestInterface $request) use ($responseBody, $requestValidator, $statusCode) {
+            if ($requestValidator !== null) {
+                $requestValidator($request);
+            }
 
-/*
-|--------------------------------------------------------------------------
-| Functions
-|--------------------------------------------------------------------------
-|
-| While Pest is very powerful out-of-the-box, you may have some testing code specific to your
-| project that you don't want to repeat in every file. Here you can also expose helpers as
-| global functions to help you to reduce the number of lines of code in your test files.
-|
-*/
+            return new Response(
+                $statusCode,
+                ['Content-Type' => 'application/json'],
+                json_encode($responseBody, JSON_THROW_ON_ERROR)
+            );
+        });
+
+    return $mock;
+}
+
+/**
+ * Create an HttpClient instance with a mock PSR-18 client.
+ *
+ * @param  array<string, mixed>  $responseBody
+ */
+function createHttpClient(array $responseBody = [], ?callable $requestValidator = null): HttpClient
+{
+    $config = new VectorProClientConfig('test-api-key');
+    $factory = new HttpFactory;
+    $mockClient = mockHttpClient($responseBody, $requestValidator);
+
+    return new HttpClient($config, $mockClient, $factory, $factory);
+}
