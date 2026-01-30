@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace VectorPro\Response;
 
-readonly class Webhook
+final readonly class Webhook
 {
     /**
      * @param  string[]  $events

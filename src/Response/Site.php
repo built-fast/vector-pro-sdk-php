@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace VectorPro\Response;
 
-readonly class Site
+final readonly class Site
 {
     /**
      * @param  string[]  $tags

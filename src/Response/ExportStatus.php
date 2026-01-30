@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace VectorPro\Response;
 
-readonly class ExportStatus
+final readonly class ExportStatus
 {
     public function __construct(
         public string $id,

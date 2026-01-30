@@ -7,7 +7,7 @@ namespace VectorPro\Response;
 /**
  * @template T
  */
-readonly class PaginatedResponse
+final readonly class PaginatedResponse
 {
     /**
      * @param  T[]  $data

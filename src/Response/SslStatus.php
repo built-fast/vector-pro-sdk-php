@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace VectorPro\Response;
 
-readonly class SslStatus
+final readonly class SslStatus
 {
     public function __construct(
         public string $id,
