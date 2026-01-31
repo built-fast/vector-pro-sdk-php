@@ -1,6 +1,11 @@
+<p align="center">
+    <img alt="BuiltFast Logo Light Mode" src="/assets/images/logo-light-mode.svg#gh-light-mode-only"/>
+    <img alt="BuiltFast Logo Dark Mode" src="/assets/images/logo-dark-mode.svg#gh-dark-mode-only"/>
+</p>
+
 # Vector Pro SDK for PHP
 
-Official PHP SDK for the [Vector Pro](https://builtfast.com) API.
+Official PHP SDK for [Vector Pro](https://builtfast.dev/api) by [BuiltFast](https://builtfast.com).
 
 ## Requirements
 
