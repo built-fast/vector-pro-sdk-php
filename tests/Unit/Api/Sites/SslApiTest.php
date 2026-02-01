@@ -14,11 +14,11 @@ describe('SslApi', function () {
             'expires_at' => '2025-12-31T23:59:59Z',
         ], function (RequestInterface $request) {
             expect($request->getMethod())->toBe('GET');
-            expect($request->getUri()->getPath())->toBe('/api/v1/vector/sites/site-123/environments/env-456/ssl');
+            expect($request->getUri()->getPath())->toBe('/api/v1/vector/environments/env-456/ssl');
         });
 
         $api = new SslApi($http);
-        $result = $api->getStatus('site-123', 'env-456');
+        $result = $api->getStatus('env-456');
 
         expect($result)->toBeInstanceOf(SslStatus::class);
         expect($result->status)->toBe('active');
@@ -28,10 +28,10 @@ describe('SslApi', function () {
     it('nudges SSL provisioning', function () {
         $http = createHttpClient([], function (RequestInterface $request) {
             expect($request->getMethod())->toBe('POST');
-            expect($request->getUri()->getPath())->toBe('/api/v1/vector/sites/site-123/environments/env-456/ssl/nudge');
+            expect($request->getUri()->getPath())->toBe('/api/v1/vector/environments/env-456/ssl/nudge');
         });
 
         $api = new SslApi($http);
-        $api->nudge('site-123', 'env-456');
+        $api->nudge('env-456');
     });
 });

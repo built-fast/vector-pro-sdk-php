@@ -116,29 +116,29 @@ $client->sites->purgeCache('site-id', ['paths' => ['/wp-content/*']]);
 $client->environments->list('site-id');
 
 // Returns Environment
-$client->environments->get('site-id', 'env-id');
+$client->environments->get('env-id');
 $client->environments->create('site-id', [
     'name' => 'staging',
     'php_version' => '8.3',
     'is_production' => false,
 ]);
-$client->environments->update('site-id', 'env-id', ['php_version' => '8.2']);
+$client->environments->update('env-id', ['php_version' => '8.2']);
 
 // Returns array
-$client->environments->delete('site-id', 'env-id');
-$client->environments->resetDatabasePassword('site-id', 'env-id');
+$client->environments->delete('env-id');
+$client->environments->resetDatabasePassword('env-id');
 ```
 
 ### Deployments
 
 ```php
 // Returns PaginatedResponse<Deployment>
-$client->environments->deployments->list('site-id', 'env-id');
+$client->environments->deployments->list('env-id');
 
 // Returns Deployment
-$client->environments->deployments->create('site-id', 'env-id', ['description' => 'Release v1.0']);
-$client->environments->deployments->get('site-id', 'env-id', 'deployment-id');
-$client->environments->deployments->rollback('site-id', 'env-id', ['deployment_id' => 'prev-id']);
+$client->environments->deployments->create('env-id', ['description' => 'Release v1.0']);
+$client->environments->deployments->get('deployment-id');
+$client->environments->deployments->rollback('env-id', ['deployment_id' => 'prev-id']);
 ```
 
 ### Database
@@ -197,10 +197,10 @@ $client->sites->waf->deleteRateLimit('site-id', 'rule-id');
 
 ```php
 // Returns SslStatus
-$client->sites->ssl->getStatus('site-id', 'env-id');
+$client->sites->ssl->getStatus('env-id');
 
 // Returns array
-$client->sites->ssl->nudge('site-id', 'env-id');
+$client->sites->ssl->nudge('env-id');
 ```
 
 ### SSH Keys
@@ -229,11 +229,11 @@ $client->account->secrets->update('secret-id', ['value' => 'new-secret']);
 $client->account->secrets->delete('secret-id');
 
 // Environment secrets - Returns Secret[] or Secret
-$client->environments->secrets->list('site-id', 'env-id');
-$client->environments->secrets->create('site-id', 'env-id', ['name' => 'DB_HOST', 'value' => 'localhost']);
-$client->environments->secrets->get('site-id', 'env-id', 'secret-id');
-$client->environments->secrets->update('site-id', 'env-id', 'secret-id', ['value' => 'newhost']);
-$client->environments->secrets->delete('site-id', 'env-id', 'secret-id');
+$client->environments->secrets->list('env-id');
+$client->environments->secrets->create('env-id', ['name' => 'DB_HOST', 'value' => 'localhost']);
+$client->environments->secrets->get('secret-id');
+$client->environments->secrets->update('secret-id', ['value' => 'newhost']);
+$client->environments->secrets->delete('secret-id');
 ```
 
 ### Webhooks

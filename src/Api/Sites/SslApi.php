@@ -9,7 +9,7 @@ use VectorPro\Response\SslStatus;
 
 final class SslApi
 {
-    private const BASE_PATH = '/api/v1/vector/sites';
+    private const BASE_PATH = '/api/v1/vector/environments';
 
     public function __construct(
         private readonly HttpClient $http,
@@ -18,9 +18,9 @@ final class SslApi
     /**
      * Get SSL status for an environment.
      */
-    public function getStatus(string $siteId, string $environmentId): SslStatus
+    public function getStatus(string $environmentId): SslStatus
     {
-        $response = $this->http->get(self::BASE_PATH."/{$siteId}/environments/{$environmentId}/ssl");
+        $response = $this->http->get(self::BASE_PATH."/{$environmentId}/ssl");
 
         return SslStatus::fromArray($response);
     }
@@ -30,8 +30,8 @@ final class SslApi
      *
      * @return array<string, mixed>
      */
-    public function nudge(string $siteId, string $environmentId): array
+    public function nudge(string $environmentId): array
     {
-        return $this->http->post(self::BASE_PATH."/{$siteId}/environments/{$environmentId}/ssl/nudge");
+        return $this->http->post(self::BASE_PATH."/{$environmentId}/ssl/nudge");
     }
 }

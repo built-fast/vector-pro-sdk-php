@@ -10,7 +10,9 @@ use VectorPro\Response\PaginatedResponse;
 
 final class DeploymentsApi
 {
-    private const BASE_PATH = '/api/v1/vector/sites';
+    private const ENVIRONMENTS_BASE_PATH = '/api/v1/vector/environments';
+
+    private const DEPLOYMENTS_BASE_PATH = '/api/v1/vector/deployments';
 
     public function __construct(
         private readonly HttpClient $http,
@@ -22,10 +24,10 @@ final class DeploymentsApi
      * @param  array{per_page?: int, page?: int}  $options
      * @return PaginatedResponse<Deployment>
      */
-    public function list(string $siteId, string $environmentId, array $options = []): PaginatedResponse
+    public function list(string $environmentId, array $options = []): PaginatedResponse
     {
         $response = $this->http->get(
-            self::BASE_PATH."/{$siteId}/environments/{$environmentId}/deployments",
+            self::ENVIRONMENTS_BASE_PATH."/{$environmentId}/deployments",
             $options
         );
 
@@ -37,10 +39,10 @@ final class DeploymentsApi
      *
      * @param  array{description?: string}  $data
      */
-    public function create(string $siteId, string $environmentId, array $data = []): Deployment
+    public function create(string $environmentId, array $data = []): Deployment
     {
         $response = $this->http->post(
-            self::BASE_PATH."/{$siteId}/environments/{$environmentId}/deployments",
+            self::ENVIRONMENTS_BASE_PATH."/{$environmentId}/deployments",
             $data
         );
 
@@ -50,10 +52,10 @@ final class DeploymentsApi
     /**
      * Get a deployment.
      */
-    public function get(string $siteId, string $environmentId, string $deploymentId): Deployment
+    public function get(string $deploymentId): Deployment
     {
         $response = $this->http->get(
-            self::BASE_PATH."/{$siteId}/environments/{$environmentId}/deployments/{$deploymentId}"
+            self::DEPLOYMENTS_BASE_PATH."/{$deploymentId}"
         );
 
         return Deployment::fromArray($response);
@@ -64,10 +66,10 @@ final class DeploymentsApi
      *
      * @param  array{deployment_id: string}  $data
      */
-    public function rollback(string $siteId, string $environmentId, array $data): Deployment
+    public function rollback(string $environmentId, array $data): Deployment
     {
         $response = $this->http->post(
-            self::BASE_PATH."/{$siteId}/environments/{$environmentId}/rollback",
+            self::ENVIRONMENTS_BASE_PATH."/{$environmentId}/rollback",
             $data
         );
 

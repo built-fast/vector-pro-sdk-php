@@ -34,11 +34,11 @@ describe('EnvironmentsApi', function () {
             'is_production' => false,
         ], function (RequestInterface $request) {
             expect($request->getMethod())->toBe('GET');
-            expect($request->getUri()->getPath())->toBe('/api/v1/vector/sites/site-123/environments/env-456');
+            expect($request->getUri()->getPath())->toBe('/api/v1/vector/environments/env-456');
         });
 
         $api = new EnvironmentsApi($http);
-        $result = $api->get('site-123', 'env-456');
+        $result = $api->get('env-456');
 
         expect($result)->toBeInstanceOf(Environment::class);
         expect($result->id)->toBe('env-456');
@@ -74,13 +74,13 @@ describe('EnvironmentsApi', function () {
             'is_production' => false,
         ], function (RequestInterface $request) {
             expect($request->getMethod())->toBe('PUT');
-            expect($request->getUri()->getPath())->toBe('/api/v1/vector/sites/site-123/environments/env-456');
+            expect($request->getUri()->getPath())->toBe('/api/v1/vector/environments/env-456');
             $body = json_decode($request->getBody()->getContents(), true);
             expect($body['php_version'])->toBe('8.2');
         });
 
         $api = new EnvironmentsApi($http);
-        $result = $api->update('site-123', 'env-456', ['php_version' => '8.2']);
+        $result = $api->update('env-456', ['php_version' => '8.2']);
 
         expect($result)->toBeInstanceOf(Environment::class);
         expect($result->php_version)->toBe('8.2');
@@ -89,20 +89,20 @@ describe('EnvironmentsApi', function () {
     it('deletes an environment', function () {
         $http = createHttpClient([], function (RequestInterface $request) {
             expect($request->getMethod())->toBe('DELETE');
-            expect($request->getUri()->getPath())->toBe('/api/v1/vector/sites/site-123/environments/env-456');
+            expect($request->getUri()->getPath())->toBe('/api/v1/vector/environments/env-456');
         });
 
         $api = new EnvironmentsApi($http);
-        $api->delete('site-123', 'env-456');
+        $api->delete('env-456');
     });
 
     it('resets database password', function () {
         $http = createHttpClient(['password' => 'new-pass'], function (RequestInterface $request) {
             expect($request->getMethod())->toBe('POST');
-            expect($request->getUri()->getPath())->toBe('/api/v1/vector/sites/site-123/environments/env-456/database/reset-password');
+            expect($request->getUri()->getPath())->toBe('/api/v1/vector/environments/env-456/database/reset-password');
         });
 
         $api = new EnvironmentsApi($http);
-        $api->resetDatabasePassword('site-123', 'env-456');
+        $api->resetDatabasePassword('env-456');
     });
 });

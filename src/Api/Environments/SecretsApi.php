@@ -9,7 +9,9 @@ use VectorPro\Response\Secret;
 
 final class SecretsApi
 {
-    private const BASE_PATH = '/api/v1/vector/sites';
+    private const ENVIRONMENTS_BASE_PATH = '/api/v1/vector/environments';
+
+    private const SECRETS_BASE_PATH = '/api/v1/vector/secrets';
 
     public function __construct(
         private readonly HttpClient $http,
@@ -20,10 +22,10 @@ final class SecretsApi
      *
      * @return Secret[]
      */
-    public function list(string $siteId, string $environmentId): array
+    public function list(string $environmentId): array
     {
         $response = $this->http->get(
-            self::BASE_PATH."/{$siteId}/environments/{$environmentId}/secrets"
+            self::ENVIRONMENTS_BASE_PATH."/{$environmentId}/secrets"
         );
 
         return array_map(Secret::fromArray(...), $response['data'] ?? $response);
@@ -34,10 +36,10 @@ final class SecretsApi
      *
      * @param  array{name: string, value: string}  $data
      */
-    public function create(string $siteId, string $environmentId, array $data): Secret
+    public function create(string $environmentId, array $data): Secret
     {
         $response = $this->http->post(
-            self::BASE_PATH."/{$siteId}/environments/{$environmentId}/secrets",
+            self::ENVIRONMENTS_BASE_PATH."/{$environmentId}/secrets",
             $data
         );
 
@@ -47,10 +49,10 @@ final class SecretsApi
     /**
      * Get a secret.
      */
-    public function get(string $siteId, string $environmentId, string $secretId): Secret
+    public function get(string $secretId): Secret
     {
         $response = $this->http->get(
-            self::BASE_PATH."/{$siteId}/environments/{$environmentId}/secrets/{$secretId}"
+            self::SECRETS_BASE_PATH."/{$secretId}"
         );
 
         return Secret::fromArray($response);
@@ -61,10 +63,10 @@ final class SecretsApi
      *
      * @param  array{value: string}  $data
      */
-    public function update(string $siteId, string $environmentId, string $secretId, array $data): Secret
+    public function update(string $secretId, array $data): Secret
     {
         $response = $this->http->put(
-            self::BASE_PATH."/{$siteId}/environments/{$environmentId}/secrets/{$secretId}",
+            self::SECRETS_BASE_PATH."/{$secretId}",
             $data
         );
 
@@ -76,10 +78,10 @@ final class SecretsApi
      *
      * @return array<string, mixed>
      */
-    public function delete(string $siteId, string $environmentId, string $secretId): array
+    public function delete(string $secretId): array
     {
         return $this->http->delete(
-            self::BASE_PATH."/{$siteId}/environments/{$environmentId}/secrets/{$secretId}"
+            self::SECRETS_BASE_PATH."/{$secretId}"
         );
     }
 }

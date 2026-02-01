@@ -14,11 +14,11 @@ describe('Environment SecretsApi', function () {
             ],
         ], function (RequestInterface $request) {
             expect($request->getMethod())->toBe('GET');
-            expect($request->getUri()->getPath())->toBe('/api/v1/vector/sites/site-123/environments/env-456/secrets');
+            expect($request->getUri()->getPath())->toBe('/api/v1/vector/environments/env-456/secrets');
         });
 
         $api = new SecretsApi($http);
-        $result = $api->list('site-123', 'env-456');
+        $result = $api->list('env-456');
 
         expect($result)->toBeArray();
         expect($result)->toHaveCount(1);
@@ -31,14 +31,14 @@ describe('Environment SecretsApi', function () {
             'name' => 'DB_HOST',
         ], function (RequestInterface $request) {
             expect($request->getMethod())->toBe('POST');
-            expect($request->getUri()->getPath())->toBe('/api/v1/vector/sites/site-123/environments/env-456/secrets');
+            expect($request->getUri()->getPath())->toBe('/api/v1/vector/environments/env-456/secrets');
             $body = json_decode($request->getBody()->getContents(), true);
             expect($body['name'])->toBe('DB_HOST');
             expect($body['value'])->toBe('localhost');
         });
 
         $api = new SecretsApi($http);
-        $result = $api->create('site-123', 'env-456', ['name' => 'DB_HOST', 'value' => 'localhost']);
+        $result = $api->create('env-456', ['name' => 'DB_HOST', 'value' => 'localhost']);
 
         expect($result)->toBeInstanceOf(Secret::class);
         expect($result->id)->toBe('secret-789');
@@ -51,11 +51,11 @@ describe('Environment SecretsApi', function () {
             'name' => 'DB_HOST',
         ], function (RequestInterface $request) {
             expect($request->getMethod())->toBe('GET');
-            expect($request->getUri()->getPath())->toBe('/api/v1/vector/sites/site-123/environments/env-456/secrets/secret-789');
+            expect($request->getUri()->getPath())->toBe('/api/v1/vector/secrets/secret-789');
         });
 
         $api = new SecretsApi($http);
-        $result = $api->get('site-123', 'env-456', 'secret-789');
+        $result = $api->get('secret-789');
 
         expect($result)->toBeInstanceOf(Secret::class);
         expect($result->id)->toBe('secret-789');
@@ -67,13 +67,13 @@ describe('Environment SecretsApi', function () {
             'name' => 'DB_HOST',
         ], function (RequestInterface $request) {
             expect($request->getMethod())->toBe('PUT');
-            expect($request->getUri()->getPath())->toBe('/api/v1/vector/sites/site-123/environments/env-456/secrets/secret-789');
+            expect($request->getUri()->getPath())->toBe('/api/v1/vector/secrets/secret-789');
             $body = json_decode($request->getBody()->getContents(), true);
             expect($body['value'])->toBe('new-value');
         });
 
         $api = new SecretsApi($http);
-        $result = $api->update('site-123', 'env-456', 'secret-789', ['value' => 'new-value']);
+        $result = $api->update('secret-789', ['value' => 'new-value']);
 
         expect($result)->toBeInstanceOf(Secret::class);
     });
@@ -81,10 +81,10 @@ describe('Environment SecretsApi', function () {
     it('deletes a secret', function () {
         $http = createHttpClient([], function (RequestInterface $request) {
             expect($request->getMethod())->toBe('DELETE');
-            expect($request->getUri()->getPath())->toBe('/api/v1/vector/sites/site-123/environments/env-456/secrets/secret-789');
+            expect($request->getUri()->getPath())->toBe('/api/v1/vector/secrets/secret-789');
         });
 
         $api = new SecretsApi($http);
-        $api->delete('site-123', 'env-456', 'secret-789');
+        $api->delete('secret-789');
     });
 });
