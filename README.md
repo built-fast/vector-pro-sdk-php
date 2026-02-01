@@ -60,10 +60,12 @@ echo $site->dev_php_version; // '8.3'
 All API methods return typed response objects for IDE autocomplete and type safety:
 
 ```php
-use VectorPro\Response\Site;
-use VectorPro\Response\Environment;
+use VectorPro\Response\Actor;
 use VectorPro\Response\Deployment;
+use VectorPro\Response\Environment;
+use VectorPro\Response\Event;
 use VectorPro\Response\PaginatedResponse;
+use VectorPro\Response\Site;
 
 // Site properties
 $site = $client->sites->get('site-id');
@@ -266,11 +268,23 @@ $client->account->apiKeys->delete('key-id');
 ### Events
 
 ```php
-$client->events->list([
+// Returns PaginatedResponse<Event>
+$response = $client->events->list([
     'site_id' => 'site-id',
     'type' => 'deployment',
     'per_page' => 50,
 ]);
+
+// Event properties
+$event = $response->data[0];
+$event->id;          // string
+$event->event;       // string (e.g., 'site.created', 'deployment.completed')
+$event->model_type;  // ?string
+$event->model_id;    // ?string
+$event->context;     // mixed
+$event->actor;       // ?Actor (ip, token_name)
+$event->occurred_at; // ?string
+$event->created_at;  // ?string
 ```
 
 ### PHP Versions
