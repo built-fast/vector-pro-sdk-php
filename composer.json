@@ -2,6 +2,7 @@
     "name": "built-fast/vector-pro-sdk",
     "description": "PHP SDK for the Vector Pro API",
     "type": "library",
+    "homepage": "https://github.com/built-fast/vector-pro-sdk-php",
     "license": "MIT",
     "require": {
         "php": "^8.3",
