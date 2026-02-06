@@ -61,6 +61,24 @@ describe('DeploymentsApi', function () {
         expect($result->description)->toBe('Release v1.0');
     });
 
+    it('creates a deployment with include_uploads', function () {
+        $http = createHttpClient([
+            'id' => 'deploy-790',
+            'description' => 'Release v1.1',
+            'status' => 'pending',
+        ], function (RequestInterface $request) {
+            expect($request->getMethod())->toBe('POST');
+            $body = json_decode($request->getBody()->getContents(), true);
+            expect($body['include_uploads'])->toBeTrue();
+        });
+
+        $api = new DeploymentsApi($http);
+        $result = $api->create('env-456', ['description' => 'Release v1.1', 'include_uploads' => true]);
+
+        expect($result)->toBeInstanceOf(Deployment::class);
+        expect($result->id)->toBe('deploy-790');
+    });
+
     it('gets a deployment', function () {
         $http = createHttpClient([
             'id' => 'deploy-789',

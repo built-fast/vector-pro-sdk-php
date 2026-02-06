@@ -37,7 +37,7 @@ final class DeploymentsApi
     /**
      * Create a deployment for an environment.
      *
-     * @param  array{description?: string}  $data
+     * @param  array{description?: string, include_uploads?: bool}  $data
      */
     public function create(string $environmentId, array $data = []): Deployment
     {
