@@ -136,7 +136,10 @@ $client->environments->resetDatabasePassword('env-id');
 $client->environments->deployments->list('env-id');
 
 // Returns Deployment
-$client->environments->deployments->create('env-id', ['description' => 'Release v1.0']);
+$client->environments->deployments->create('env-id', [
+    'description' => 'Release v1.0',
+    'include_uploads' => true,
+]);
 $client->environments->deployments->get('deployment-id');
 $client->environments->deployments->rollback('env-id', ['deployment_id' => 'prev-id']);
 ```
